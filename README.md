@@ -1,4 +1,4 @@
-# 🧪 Socket Programming in Python
+# 🧪 Socket Programming in Python🧪
 
 A hands-on collection of small socket-programming exercises in Python:
 1) a **basic** single client/server echo,
@@ -21,7 +21,6 @@ A hands-on collection of small socket-programming exercises in Python:
 - [Test on Local Network (LAN)](#test-on-local-network-lan)
 - [Troubleshooting](#troubleshooting)
 - [Project Structure](#project-structure)
-- [License](#license)
 
 ---
 
@@ -63,13 +62,13 @@ Most folders follow this pattern:
 ### Typical ports & commands
 ```bash
 # Terminal A — start server
-python server.py --host 127.0.0.1 --port 5000
+python server.py 
 
 # Terminal B — start client
-python client.py --host 127.0.0.1 --port 5000
+python client.py 
 
 # (Optional) More clients in C/D/E...
-python client.py --host 127.0.0.1 --port 5000
+python client.py 
 ```
 
 ---
@@ -85,9 +84,9 @@ python client.py --host 127.0.0.1 --port 5000
 ```bash
 cd basic
 # Server
-python server.py --host 127.0.0.1 --port 5000
+python server.py 
 # Client (new terminal)
-python client.py --host 127.0.0.1 --port 5000
+python client.py 
 ```
 
 ### Try it
@@ -110,9 +109,9 @@ python client.py --host 127.0.0.1 --port 5000
 ### Run
 ```bash
 cd multiclients
-python server.py --host 127.0.0.1 --port 5001
+python server.py 
 # Open 2–4 more terminals and start clients:
-python client.py --host 127.0.0.1 --port 5001
+python client.py 
 ```
 
 ### What to look for
@@ -134,9 +133,9 @@ python client.py --host 127.0.0.1 --port 5001
 ### Run
 ```bash
 cd multiclientsusingthreading
-python server.py --host 127.0.0.1 --port 5002
+python server.py 
 # Start several clients in separate terminals:
-python client.py --host 127.0.0.1 --port 5002
+python client.py 
 ```
 
 ### What to look for
