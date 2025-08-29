@@ -47,3 +47,26 @@ python -m venv .venv
 . .venv/Scripts/activate
 # macOS/Linux
 source .venv/bin/activate
+
+## Common How-To
+Most folders follow this pattern:
+
+- A **server** script (e.g., `server.py`) that binds to `HOST` and `PORT`  
+- A **client** script (e.g., `client.py`) that connects to the server  
+
+> If the scripts accept CLI flags, use `--host` and `--port`.  
+> If they don’t, open the file and edit constants near the top (e.g., `HOST = '127.0.0.1'`, `PORT = 5000`).
+
+### Typical ports & commands
+```bash
+# Terminal A — start server
+python server.py --host 127.0.0.1 --port 5000
+
+# Terminal B — start client
+python client.py --host 127.0.0.1 --port 5000
+
+# (Optional) More clients in C/D/E...
+python client.py --host 127.0.0.1 --port 5000
+
+
+
