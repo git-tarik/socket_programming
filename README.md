@@ -4,9 +4,9 @@ A hands-on collection of small socket-programming exercises in Python:
 1) a **basic** single client/server echo,
 2) a **multi-client** server (iterative),
 3) a **multi-client** server using **threads**,
-4) a **sandbox** for your experiments.
+4) a **sandbox** for experiments.
 
-> Folders in this repo: `basic/`, `multiclients/`, `multiclientsusingthreading/`, `sandbox/`. Language: Python. :contentReference[oaicite:1]{index=1}
+> Folders in this repo: `basic/`, `multiclients/`, `multiclientsusingthreading/`, `sandbox/`.
 
 ---
 
@@ -48,6 +48,9 @@ python -m venv .venv
 # macOS/Linux
 source .venv/bin/activate
 ```
+
+---
+
 ## Common How-To
 Most folders follow this pattern:
 
@@ -68,21 +71,147 @@ python client.py --host 127.0.0.1 --port 5000
 # (Optional) More clients in C/D/E...
 python client.py --host 127.0.0.1 --port 5000
 ```
-1) basic — Single Client/Server Echo
 
-Goal: Smallest possible request–response model.
+---
 
-Concept:
+## 1) `basic` — Single Client/Server Echo
+**Goal:** Smallest possible request–response model.
 
-Server: socket() → bind() → listen() → accept() → recv()/send() → close()
+**Concept:**
+- Server: `socket() → bind() → listen() → accept() → recv()/send() → close()`
+- Client: `socket() → connect() → send()/recv() → close()`
 
-Client: socket() → connect() → send()/recv() → close()
-
-Run
+### Run
+```bash
 cd basic
 # Server
 python server.py --host 127.0.0.1 --port 5000
 # Client (new terminal)
 python client.py --host 127.0.0.1 --port 5000
+```
 
+### Try it
+- Type a message in the client; the server echos it back.
+- Quit convention: type `quit` or press `Ctrl+C` (depends on your script).
+
+### What to look for
+- How the server handles a single connection from `accept()` to `close()`.
+- Clean shutdown when client exits.
+
+---
+
+## 2) `multiclients` — Multiple Clients (Iterative)
+**Goal:** Allow many clients **one at a time** (no threads yet).
+
+**Concept:**
+- The server loops over `accept()` and serves one client to completion before handling the next.
+- Useful for understanding blocking I/O and control flow.
+
+### Run
+```bash
+cd multiclients
+python server.py --host 127.0.0.1 --port 5001
+# Open 2–4 more terminals and start clients:
+python client.py --host 127.0.0.1 --port 5001
+```
+
+### What to look for
+- When one client is being served, others must wait.
+- Proper closing of client sockets so the next `accept()` can proceed.
+
+**Tip:** If you need basic “broadcast”, the iterative version typically won’t broadcast; each client is handled in turn.
+
+---
+
+## 3) `multiclientsusingthreading` — Multiple Clients (Threaded)
+**Goal:** Handle many clients **concurrently**.
+
+**Concept:**
+- Main thread: `bind()` + `listen()` + `accept()`.
+- For each accepted client, spawn a **thread** that loops on `recv()` and responds.
+- Optionally keep a shared list of connections to **broadcast** messages.
+
+### Run
+```bash
+cd multiclientsusingthreading
+python server.py --host 127.0.0.1 --port 5002
+# Start several clients in separate terminals:
+python client.py --host 127.0.0.1 --port 5002
+```
+
+### What to look for
+- Per-client worker threads.
+- Thread-safe broadcast (if implemented): on message from Client A, send to all others.
+- Graceful cleanup: closing a client should end its thread without crashing the server.
+
+**Safety notes:**
+- Be mindful of shared data structures; use locks if you mutate a global client list.
+
+---
+
+## 4) `sandbox` — Experiments & Extras
+**Goal:** A playground to try variations:
+- Change message framing (line-based vs length-prefixed).
+- Add simple “/nick” or “/quit” commands.
+- Experiment with timeouts (`settimeout`) or non-blocking sockets.
+- Swap `127.0.0.1` with your LAN IP to chat across machines on the same Wi-Fi.
+
+### Run
+```bash
+cd sandbox
+python server.py --host 127.0.0.1 --port 5003
+python client.py --host 127.0.0.1 --port 5003
+```
+
+---
+
+## Test on Local Network (LAN)
+1. **Find your server machine’s IP**
+   - Windows: `ipconfig` → look for `IPv4 Address` (e.g., `192.168.1.23`)
+   - macOS/Linux: `ifconfig` or `ip addr`
+2. Start the server with that IP:
+   ```bash
+   python server.py --host 192.168.1.23 --port 5000
+   ```
+3. On other devices on the same Wi-Fi:
+   ```bash
+   python client.py --host 192.168.1.23 --port 5000
+   ```
+4. If connection fails, see **Troubleshooting**.
+
+---
+
+## Troubleshooting
+- **`Address already in use`**  
+  Another server is bound to that port. Choose a new port or wait until the old socket releases (TIME_WAIT).
+- **`Connection refused`**  
+  Server not running, wrong IP/port, or firewall blocked.
+- **Windows Defender / Firewall prompts**  
+  Allow Python on **Private networks** (Block Public if you’re unsure).
+- **App hangs waiting for data**  
+  The other side didn’t send a newline/terminator your code expects, or you’re reading more bytes than sent.
+- **Crash on client disconnect**  
+  Handle `recv()` returning 0 bytes and catch exceptions around `sendall()`.
+
+---
+
+## Project Structure
+```
+socket_programming/
+├─ basic/
+│  ├─ server.py
+│  └─ client.py
+├─ multiclients/
+│  ├─ server.py
+│  └─ client.py
+├─ multiclientsusingthreading/
+│  ├─ server.py
+│  └─ client.py
+└─ sandbox/
+   ├─ server.py
+   └─ client.py
+```
+> If your filenames differ, keep the same idea: each folder has a server and a client script.
+
+---
 
