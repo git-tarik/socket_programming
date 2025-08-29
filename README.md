@@ -47,7 +47,7 @@ python -m venv .venv
 . .venv/Scripts/activate
 # macOS/Linux
 source .venv/bin/activate
-
+```
 ## Common How-To
 Most folders follow this pattern:
 
@@ -67,6 +67,22 @@ python client.py --host 127.0.0.1 --port 5000
 
 # (Optional) More clients in C/D/E...
 python client.py --host 127.0.0.1 --port 5000
+```
+1) basic — Single Client/Server Echo
 
+Goal: Smallest possible request–response model.
+
+Concept:
+
+Server: socket() → bind() → listen() → accept() → recv()/send() → close()
+
+Client: socket() → connect() → send()/recv() → close()
+
+Run
+cd basic
+# Server
+python server.py --host 127.0.0.1 --port 5000
+# Client (new terminal)
+python client.py --host 127.0.0.1 --port 5000
 
 
