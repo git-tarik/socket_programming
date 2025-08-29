@@ -1,4 +1,4 @@
-# 🧪 Socket Programming in Python — Four Mini-Projects
+# 🧪 Socket Programming in Python
 
 A hands-on collection of small socket-programming exercises in Python:
 1) a **basic** single client/server echo,
