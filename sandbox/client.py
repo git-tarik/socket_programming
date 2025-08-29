@@ -29,7 +29,7 @@ def main():
     # ---- Scripted session using predefined commands ----
     commands = [
         "read data.txt",
-        "write data.txt",   # keep as in your original list
+        "write data.txt",  
         "exit"
     ]
 
